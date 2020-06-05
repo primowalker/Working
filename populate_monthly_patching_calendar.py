@@ -76,7 +76,7 @@ except:
 f = open(outfile, "a")
 
 # Print the header to the output file
-header = 'Server,OS Name,ENV,Virtual,Implementation Date,Day of week,Start Time,End Time,Time Zone,Special Instructions on reboot'
+header = 'Server,OS Name,ENV,Virtual,Implementation Date,Day of week,Start Time,End Time,Time Zone,Old Kernel Release,New Kernel,Release,Special Instructions on reboot,Implementor,Status'
 f.write(''.join(str(item) for item in header) + '\n')
 
 # Get data from Master_Linux_FDE_Patching_Schedule.csv
@@ -116,6 +116,7 @@ with open('Master_Linux_FDE_Patching_Schedule.csv') as csvfile:
         if day_of_month == '2nd Tuesday':
             monthcal = c.monthdatescalendar(year,month)
             secomd_tuesday = [day for week in monthcal for day in week if day.weekday() == calendar.TUESDAY and day.month == month][1]
+
             output = (server, ',', os, ',', env, ',', vm, ',', secomd_tuesday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
             f.write(''.join(str(item) for item in output) + '\n')
 
@@ -179,67 +180,36 @@ with open('Master_Linux_FDE_Patching_Schedule.csv') as csvfile:
         if day_of_month == '3rd Friday':
             monthcal = c.monthdatescalendar(year,month)
             third_friday = [day for week in monthcal for day in week if day.weekday() == calendar.FRIDAY and day.month == month][2]
-            output = (server, ',', os, ',', env, ',', vm, ',', third_thursday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
+            output = (server, ',', os, ',', env, ',', vm, ',', third_friday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
             f.write(''.join(str(item) for item in output) + '\n')
 
         if day_of_month == '4th Friday':
             monthcal = c.monthdatescalendar(year, month)
             forth_friday = [day for week in monthcal for day in week if day.weekday() == calendar.FRIDAY and day.month == month][3]
-            output = (server, ',', os, ',', env, ',', vm, ',', forth_thursday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
+            output = (server, ',', os, ',', env, ',', vm, ',', forth_friday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
             f.write(''.join(str(item) for item in output) + '\n')
 
         # Get Saturdays
         if day_of_month == '3rd Saturday':
-            monthcal = c.monthdatescalendar(year,month)
-            third_saturday = [day for week in monthcal for day in week if day.weekday() == calendar.FRIDAY and day.month == month][2]
+            monthcal = c.monthdatescalendar(year, month)
+            third_saturday = [day for week in monthcal for day in week if day.weekday() == calendar.SATURDAY and day.month == month][2]
             output = (server, ',', os, ',', env, ',', vm, ',', third_saturday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
             f.write(''.join(str(item) for item in output) + '\n')
 
         # Get Sundays
         if day_of_month == '3rd Sunday':
-            monthcal = c.monthdatescalendar(year,month)
-            third_sunday = [day for week in monthcal for day in week if day.weekday() == calendar.FRIDAY and day.month == month][2]
+            monthcal = c.monthdatescalendar(year, month)
+            third_sunday = [day for week in monthcal for day in week if day.weekday() == calendar.SUNDAY and day.month == month][2]
             output = (server, ',', os, ',', env, ',', vm, ',', third_sunday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
             f.write(''.join(str(item) for item in output) + '\n')
 
         # Get data for last day of month
         if day_of_month == 'End of month':
-            year = 2020
             yr = str(year)
-            month = 7
             mon = str(month)
             ldom = (calendar.monthrange(year, month)[1])
             last_of_month = str(ldom)
             last_day_of_month = (yr + '-' + mon + '-' + last_of_month)
             output = (server, ',', os, ',', env, ',', vm, ',', last_day_of_month, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
             f.write(''.join(str(item) for item in output) + '\n')
-
-        # Get Tuesdays
-        if day_of_month == 'Tuesday':
-            monthcal = c.monthdatescalendar(year, month)
-            forth_tuesday = [day for week in monthcal for day in week if day.weekday() == calendar.MONDAY and day.month == month][3]
-            output = (server, ',', os, ',', env, ',', vm, ',', forth_tuesday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
-            f.write(''.join(str(item) for item in output) + '\n')
-
-        # Get Wednesdays
-        if day_of_month == 'Wednesday':
-            monthcal = c.monthdatescalendar(year, month)
-            forth_wednesday = [day for week in monthcal for day in week if day.weekday() == calendar.MONDAY and day.month == month][3]
-            output = (server, ',', os, ',', env, ',', vm, ',', forth_wednesday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
-            f.write(''.join(str(item) for item in output) + '\n')
-
-        # Get Thursdays
-        if day_of_month == 'Thursday':
-            monthcal = c.monthdatescalendar(year, month)
-            forth_thursday = [day for week in monthcal for day in week if day.weekday() == calendar.MONDAY and day.month == month][3]
-            output = (server, ',', os, ',', env, ',', vm, ',', forth_thursday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
-            f.write(''.join(str(item) for item in output) + '\n')
-
-        # Get Fridays
-        if day_of_month == 'Friday':
-            monthcal = c.monthdatescalendar(year, month)
-            forth_friday = [day for week in monthcal for day in week if day.weekday() == calendar.MONDAY and day.month == month][3]
-            output = (server, ',', os, ',', env, ',', vm, ',', forth_friday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
-            f.write(''.join(str(item) for item in output) + '\n')
-
 f.close()
