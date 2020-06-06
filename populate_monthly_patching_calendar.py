@@ -41,6 +41,8 @@ import calendar
 import argparse
 import csv
 import os
+from datetime import datetime , timedelta
+import datetime
 
 # Create the CLI parser
 parser = argparse.ArgumentParser(description='',
@@ -60,6 +62,24 @@ month = int(args.month_in)
 
 # Get our dates
 c = calendar.Calendar(firstweekday=calendar.SUNDAY)
+
+# Function to get the last Thursday of the month
+def LastThInMonth(year, month):
+    # Create a datetime.date for the last day of the given month
+    daysInMonth = calendar.monthrange(year, month)[1]   # Returns (month, numberOfDaysInMonth)
+    dt = datetime.date(year, month, daysInMonth)
+
+    # Back up to the most recent Thursday
+    offset = 4 - dt.isoweekday()
+    if offset > 0: offset -= 7                          # Back up one week if necessary
+    dt += datetime.timedelta(offset)                    # dt is now date of last Th in month
+
+    # Throw an exception if dt is in the current month and occurred before today
+    now = datetime.date.today()                         # Get current date (local time, not utc)
+    if dt.year == now.year and dt.month == now.month and dt < now:
+        raise Exception('Oops - missed the last Thursday of this month')
+
+    return dt
 
 # Set the output file name
 mon = str(month)
@@ -201,6 +221,12 @@ with open('Master_Linux_FDE_Patching_Schedule.csv') as csvfile:
             monthcal = c.monthdatescalendar(year, month)
             third_sunday = [day for week in monthcal for day in week if day.weekday() == calendar.SUNDAY and day.month == month][2]
             output = (server, ',', os, ',', env, ',', vm, ',', third_sunday, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
+            f.write(''.join(str(item) for item in output) + '\n')
+
+        # Get the last Thursday of the month
+        if day_of_month == 'Last Thursday of Month':
+            last_thursday_of_month = LastThInMonth(year, month)
+            output = (server, ',', os, ',', env, ',', vm, ',', last_thursday_of_month, ',', day_of_month, ',', start_time, ',', end_time, ',', time_zone, ',', notes)
             f.write(''.join(str(item) for item in output) + '\n')
 
         # Get data for last day of month
